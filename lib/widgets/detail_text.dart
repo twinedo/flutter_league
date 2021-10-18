@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class DetailText extends StatelessWidget {
   final String title;
-  final String description;
-  const DetailText({Key? key, required this.title, required this.description})
+  final Widget? descWidgets;
+  const DetailText({Key? key, required this.title, this.descWidgets})
       : super(key: key);
 
   @override
@@ -20,7 +20,7 @@ class DetailText extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
-          Expanded(flex: 2, child: Text(description))
+          Expanded(flex: 2, child: descWidgets!)
         ],
       ),
     );

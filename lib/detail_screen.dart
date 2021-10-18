@@ -116,13 +116,21 @@ class _DetailMobileState extends State<DetailMobile> {
                             ],
                           ),
                         ),
+                        DetailText(title: 'Description', descWidgets: Align(
+                                      alignment: Alignment.center,
+                                      child: Text(widget.club.description,
+                                          textAlign: TextAlign.justify))),
                         DetailText(
-                            title: 'Manajer', description: widget.club.manager),
+                            title: 'Manajer', descWidgets: Text(widget.club.manager)),
                         DetailText(
-                            title: 'Stadion', description: widget.club.stadion),
+                            title: 'Stadion', descWidgets: Text(widget.club.stadion)),
                         DetailText(
                             title: 'Didirikan',
-                            description: widget.club.didirikan),
+                            descWidgets: Text(widget.club.didirikan)),
+                        DetailText(title: 'Website', descWidgets: Linkify(
+                                    text: widget.club.website,
+                                    onOpen: _onOpen,
+                                  )),
                         Container(
                           margin: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Row(
@@ -351,7 +359,7 @@ class _DetailWebState extends State<DetailWeb> {
                       ),
                       DetailText(
                           title: 'Didirikan',
-                          description: widget.club.didirikan),
+                          descWidgets: Text(widget.club.didirikan)),
                       Container(
                         margin: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Row(
