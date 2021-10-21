@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:football_clubs/model/clubs_model.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
@@ -40,7 +41,10 @@ class _DetailMobileState extends State<DetailMobile> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(child: SmallMediumMode(club: widget.club)),
+        child: SingleChildScrollView(
+            child: SmallMediumMode(
+          club: widget.club,
+        )),
       ),
     );
   }
@@ -59,14 +63,16 @@ class _DetailWebState extends State<DetailWeb> {
   bool isFavorite = false;
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-            child: screenWidth < 800
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return Scaffold(
+          body: SafeArea(
+            child: constraints.maxWidth < 800
                 ? SmallMediumMode(club: widget.club)
-                : LargeMode(club: widget.club)),
-      ),
+                : LargeMode(club: widget.club),
+          ),
+        );
+      },
     );
   }
 }
@@ -89,35 +95,36 @@ class _SmallMediumModeState extends State<SmallMediumMode> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Stack(
-          // alignment: Alignment.center,
           children: [
             Align(
                 alignment: Alignment.center,
                 child: Image.network(widget.club.logo)),
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: Colors.grey,
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
+            !kIsWeb
+                ? SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: Colors.grey,
+                            child: IconButton(
+                              icon: const Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ),
+                          // const FavoriteButton(),
+                        ],
                       ),
                     ),
-                    // const FavoriteButton(),
-                  ],
-                ),
-              ),
-            ),
+                  )
+                : Container()
           ],
         ),
         Container(
@@ -229,137 +236,113 @@ class _LargeModeState extends State<LargeMode> {
   bool isFavorite = false;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Stack(
-          // alignment: Alignment.center,
-          children: [
-            // Align(
-            //     alignment: Alignment.center,
-            //     child: Image.network(widget.club.logo)),
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 64),
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: Container(
+            width: 1200,
+            margin: const EdgeInsets.all(8.0),
+            child: SingleChildScrollView(
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: Colors.grey,
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
-                    // const FavoriteButton(),
-                  ],
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: Image.network(widget.club.logo),
                 ),
-              ),
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            Container(
-              margin: const EdgeInsets.only(top: 16.0),
-              child: Column(
-                children: [
-                  Image.network(widget.club.logo),
-                  Text(
-                    widget.club.name,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 30.0,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              // decoration:
-              //     BoxDecoration(border: Border.all(color: Colors.black)),
-              margin: const EdgeInsets.only(top: 16.0, left: 8.0, right: 8.0),
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      DetailText(
-                          title: 'Description',
-                          descWidgets: Align(
-                              alignment: Alignment.center,
-                              child: Text(widget.club.description,
-                                  textAlign: TextAlign.justify))),
-                      DetailText(
-                          title: 'Manajer',
-                          descWidgets: Text(widget.club.manager)),
-                      DetailText(
-                          title: 'Stadion',
-                          descWidgets: Text(widget.club.stadion)),
-                      DetailText(
-                          title: 'Didirikan',
-                          descWidgets: Text(widget.club.didirikan)),
-                      DetailText(
-                          title: 'Website',
-                          descWidgets: Linkify(
-                            text: widget.club.website,
-                            onOpen: _onOpen,
-                          )),
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Row(
+                Expanded(
+                  child: Container(
+                    margin:
+                        const EdgeInsets.only(top: 16.0, left: 8.0, right: 8.0),
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
                           children: [
-                            Expanded(
-                              child: Container(
-                                margin: const EdgeInsets.only(right: 4.0),
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      primary:
-                                          isVoted ? Colors.green : Colors.blue,
-                                      onPrimary: Colors.white),
-                                  onPressed: () {
-                                    setState(() {
-                                      isVoted = !isVoted;
-                                    });
-                                  },
-                                  child: Text(isVoted ? 'Voted' : 'Vote'),
-                                ),
+                            Text(
+                              widget.club.name,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 30.0,
                               ),
                             ),
-                            Expanded(
-                              child: Container(
-                                margin: const EdgeInsets.only(left: 4.0),
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      primary:
-                                          isFavorite ? Colors.red : Colors.grey,
-                                      onPrimary: Colors.white),
-                                  onPressed: () {
-                                    setState(() {
-                                      isFavorite = !isFavorite;
-                                    });
-                                  },
-                                  child: Text(isFavorite ? 'Liked' : 'Like'),
-                                ),
+                            DetailText(
+                                title: 'Description',
+                                descWidgets: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(widget.club.description,
+                                        textAlign: TextAlign.justify))),
+                            DetailText(
+                                title: 'Manajer',
+                                descWidgets: Text(widget.club.manager)),
+                            DetailText(
+                                title: 'Stadion',
+                                descWidgets: Text(widget.club.stadion)),
+                            DetailText(
+                                title: 'Didirikan',
+                                descWidgets: Text(widget.club.didirikan)),
+                            DetailText(
+                                title: 'Website',
+                                descWidgets: Linkify(
+                                  text: widget.club.website,
+                                  onOpen: _onOpen,
+                                )),
+                            Container(
+                              margin: const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      margin: const EdgeInsets.only(right: 4.0),
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            primary: isVoted
+                                                ? Colors.green
+                                                : Colors.blue,
+                                            onPrimary: Colors.white),
+                                        onPressed: () {
+                                          setState(() {
+                                            isVoted = !isVoted;
+                                          });
+                                        },
+                                        child: Text(isVoted ? 'Voted' : 'Vote'),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      margin: const EdgeInsets.only(left: 4.0),
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            primary: isFavorite
+                                                ? Colors.red
+                                                : Colors.grey,
+                                            onPrimary: Colors.white),
+                                        onPressed: () {
+                                          setState(() {
+                                            isFavorite = !isFavorite;
+                                          });
+                                        },
+                                        child:
+                                            Text(isFavorite ? 'Liked' : 'Like'),
+                                      ),
+                                    ),
+                                  )
+                                ],
                               ),
                             )
                           ],
                         ),
-                      )
-                    ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            )
-          ],
-        )
-      ],
+                )
+              ],
+            )),
+          ),
+        ),
+      ),
     );
   }
 

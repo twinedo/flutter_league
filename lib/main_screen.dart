@@ -45,41 +45,38 @@ class ClubList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scrollbar(
-      isAlwaysShown: true,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: GridView.count(
-          crossAxisCount: gridCount,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          children: premierLeagueList.map((club) {
-            return InkWell(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return DetailScreen(club: club);
-                }));
-              },
-              child: Card(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(flex: 2, child: Image.network(club.logo)),
-                    Expanded(
-                        child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        club.name,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ))
-                  ],
-                ),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: GridView.count(
+        crossAxisCount: gridCount,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        children: premierLeagueList.map((club) {
+          return InkWell(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return DetailScreen(club: club);
+              }));
+            },
+            child: Card(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(flex: 2, child: Image.network(club.logo)),
+                  Expanded(
+                      child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      club.name,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ))
+                ],
               ),
-            );
-          }).toList(),
-        ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
